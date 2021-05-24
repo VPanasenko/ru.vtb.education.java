@@ -1,4 +1,4 @@
-package lesson2;
+package lesson2.Exceptions;
 
 public class MyArraySizeException extends ArrayIndexOutOfBoundsException{
     private final String errorCode = "MASE2";

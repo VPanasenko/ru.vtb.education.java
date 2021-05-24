@@ -1,10 +1,9 @@
 package lesson2.Array44;
 
-import lesson2.MyArrayDataException;
-import lesson2.MyArraySizeException;
+import lesson2.Exceptions.MyArrayDataException;
+import lesson2.Exceptions.MyArraySizeException;
 
 import java.text.MessageFormat;
-import java.util.Random;
 
 public class Array44 {
     private int firstDim = 0;

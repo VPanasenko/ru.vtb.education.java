@@ -1,4 +1,4 @@
-package lesson2;
+package lesson2.Exceptions;
 
 public class MyArrayDataException extends NumberFormatException{
     private final String errorCode = "MADE2";

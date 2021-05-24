@@ -3,24 +3,26 @@ package lesson2;
 import lesson2.Array44.Array44;
 import lesson2.Big.BigArrayList;
 import lesson2.Big.BigLinkedList;
+import lesson2.Exceptions.MyArrayDataException;
+import lesson2.Exceptions.MyArraySizeException;
 
 public class MainApp {
     public static void main(String[] args) {
-//        System.out.println("==================================");
-//        System.out.println("==================================");
-//        System.out.println("Пробежка с некорректными значениям int в массиве");
-//        System.out.println("==================================");
-//        System.out.println("==================================");
-//        Tasks1To3(true);
-//
-//        System.out.println("==================================");
-//        System.out.println("==================================");
-//        System.out.println("Пробежка только с цифрами в массиве");
-//        System.out.println("==================================");
-//        System.out.println("==================================");
-//        Tasks1To3(false);
+        System.out.println("==================================");
+        System.out.println("==================================");
+        System.out.println("Пробежка с некорректными значениям int в массиве");
+        System.out.println("==================================");
+        System.out.println("==================================");
+        Tasks1To3(true);
 
-        //Task4();
+        System.out.println("==================================");
+        System.out.println("==================================");
+        System.out.println("Пробежка только с цифрами в массиве");
+        System.out.println("==================================");
+        System.out.println("==================================");
+        Tasks1To3(false);
+
+        Task4();
         Task5();
     }
 
