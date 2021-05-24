@@ -38,7 +38,12 @@ public class MainApp {
 
             totalTime += threadTime.get();
 
-            System.out.println(String.format(template, threadEndIndex - threadStartIndex, i + 1, threadTime.get()));
+            // Из-за нулевого индекса первый элемент теряется. Для всех вариантов кроме последних добавляем 1.
+            int itemsRefilled = threadEndIndex - threadStartIndex + 1;
+            if ((i + 1) == threadCount)
+                itemsRefilled--;
+
+            System.out.println(String.format(template, itemsRefilled, i + 1, threadTime.get()));
         }
 
         return totalTime;
