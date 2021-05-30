@@ -45,7 +45,7 @@ public class Box<T extends Fruit> {
             return false;
         }
 
-        return this.getWeight() == anotherBox.getWeight();
+        return this.getWeight() - anotherBox.getWeight() < 0.001f;
     }
 
     public ArrayList<T> moveAllInto(Box<T> anotherBox){

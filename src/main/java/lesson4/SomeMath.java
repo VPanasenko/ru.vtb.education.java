@@ -1,7 +1,7 @@
 package lesson4;
 
 public class SomeMath {
-    public static final int size = 100000000;
+    public static final int size = 1000000;
 
     private float[] arr = new float[size];
 
@@ -15,18 +15,16 @@ public class SomeMath {
         return arr;
     }
 
-    public long refillAndCalculateTime(float[] inArray){
+    public long refillAndCalculateTime(int startIndex, int endIndex) {
         long totalTime = 0;
 
-        if (inArray != null) {
-            for (int i = 0; i < inArray.length; i++) {
-                long start = System.currentTimeMillis();
-                // См. комментарий к методу ниже.
-                // arr[i] = calculateNewValue(i, arr[i]);
-                arr[i] = (float) (arr[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
-                long operationLength = System.currentTimeMillis() - start;
-                totalTime += operationLength;
-            }
+        for (int i = startIndex; i < endIndex; i++) {
+            long start = System.currentTimeMillis();
+            // См. комментарий к методу ниже.
+            // arr[i] = calculateNewValue(i, arr[i]);
+            arr[i] = (float) (arr[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
+            long operationLength = System.currentTimeMillis() - start;
+            totalTime += operationLength;
         }
 
         return totalTime;

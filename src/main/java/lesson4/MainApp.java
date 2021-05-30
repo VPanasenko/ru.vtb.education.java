@@ -8,14 +8,14 @@ public class MainApp {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         long oneThreadTime = OneThread();
         System.out.println(String.format(template, SomeMath.size, "main", oneThreadTime));
-        int threadCount = 16;
+        int threadCount = 14;
         long multipleThreadsTime = MultipleThreads(threadCount);
         System.out.println(String.format(template, SomeMath.size, "all", multipleThreadsTime));
     }
 
     public static long OneThread(){
         SomeMath someMath = new SomeMath();
-        return someMath.refillAndCalculateTime(someMath.getArr());
+        return someMath.refillAndCalculateTime(0, SomeMath.size);
     }
 
     public static long MultipleThreads(int threadCount) throws ExecutionException, InterruptedException {
@@ -27,23 +27,17 @@ public class MainApp {
         SomeMath someMath = new SomeMath();
         int portionSize = SomeMath.size / threadCount;
         for (int i = 0; i < threadCount; i++) {
-            final int threadStartIndex = i * portionSize;
-            final int threadEndIndex = (i + 1) < threadCount ? ((i + 1) * portionSize - 1) : SomeMath.size;
-            float[] threadArr = Arrays.copyOfRange(someMath.getArr(), threadStartIndex, threadEndIndex);
+            int threadStartIndex = i * portionSize;
+            int threadEndIndex = (i + 1) < threadCount ? ((i + 1) * portionSize) : SomeMath.size;
             Future<Long> threadTime = fixed.submit(() ->{
                 {
-                    return someMath.refillAndCalculateTime(threadArr);
+                    return someMath.refillAndCalculateTime(threadStartIndex, threadEndIndex);
                 }
             });
 
             totalTime += threadTime.get();
 
-            // Из-за нулевого индекса первый элемент теряется. Для всех вариантов кроме последних добавляем 1.
-            int itemsRefilled = threadEndIndex - threadStartIndex + 1;
-            if ((i + 1) == threadCount)
-                itemsRefilled--;
-
-            System.out.println(String.format(template, itemsRefilled, i + 1, threadTime.get()));
+            System.out.println(String.format(template, threadEndIndex - threadStartIndex, i + 1, threadTime.get()));
         }
 
         return totalTime;
