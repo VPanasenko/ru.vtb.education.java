@@ -3,7 +3,7 @@ package lesson5.Updated;
 import java.util.concurrent.*;
 
 public class MainClass {
-    public static final int CARS_COUNT = 10;
+    public static final int CARS_COUNT = 10   ;
     public static void main(String[] args) throws InterruptedException, BrokenBarrierException {
         // Синхронизация старта
         CyclicBarrier startCyclicBarrier = new CyclicBarrier(CARS_COUNT + 1);
