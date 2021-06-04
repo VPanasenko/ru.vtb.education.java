@@ -2,6 +2,7 @@ package lesson6;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -69,14 +70,12 @@ public class MainApp {
     }
 
     private static void Task1(){
-        // Если бы здесь нужна была сортировка по итоговому количеству, например, по убыванию, то тут вообще ахтунг.
-        words.stream().map(w->w.toLowerCase()).distinct().forEach((str)-> System.out.println(
-                String.format("Элемент '%1$s' встречается %2$s раз", str, words.stream().map(w->w.toLowerCase()).filter((v) -> str == v).count())
-                ));
+        System.out.println((words.stream().map(w->w.toLowerCase()).collect(Collectors.groupingBy(s->s, Collectors.counting())))
+                .entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).findFirst().map(Object::toString).orElse(""));
     }
 
     private static void Task2() {
-        OptionalDouble avg = employees.stream().map((Function<Employee, Double>) e -> e.getSalary()).mapToDouble(d->d).average();
+        OptionalDouble avg = employees.stream().mapToDouble((ToDoubleFunction<? super Employee>) e -> e.getSalary()).average();
         System.out.println("Средняя зарплата составлет " + avg.getAsDouble() + " чего-то там.");
     }
 
@@ -102,12 +101,12 @@ public class MainApp {
 
     private static void Task6() {
         System.out.println("Суммарная длина строк в массиве 'words' составляет " +
-                words.stream().map(str->str.length()).reduce(0, (result, l) ->
-                        result += l
+                words.stream().map(str->str.length()).reduce(0, (result, strLength) ->
+                        result += strLength
                 ));
     }
 
     private static void Task7() {
-        System.out.println("Первые 3 слова в алфавитном порядке: " + words.stream().limit(3).sorted().collect(Collectors.joining(", ", "", "")));
+        System.out.println("Первые 3 слова в алфавитном порядке: " + words.stream().limit(3).sorted().collect(Collectors.joining(", ")));
     }
 }
