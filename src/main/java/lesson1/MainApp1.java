@@ -3,7 +3,7 @@ package lesson1;
 import lesson1.Person.Person;
 import lesson1.Transport.*;
 
-public class MainApp {
+public class MainApp1 {
     public static void main(String[] args) {
         Transportable[] transports = {
                 new Motorcycle(),

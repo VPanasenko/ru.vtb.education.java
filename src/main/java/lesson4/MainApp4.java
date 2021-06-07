@@ -3,7 +3,7 @@ package lesson4;
 import java.util.Arrays;
 import java.util.concurrent.*;
 
-public class MainApp {
+public class MainApp4 {
     public static final String template = "Time of refilling %1$s items in %2$s thread is %3$s ms";
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         long oneThreadTime = OneThread();

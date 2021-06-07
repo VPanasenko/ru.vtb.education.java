@@ -6,7 +6,7 @@ import lesson2.Big.BigLinkedList;
 import lesson2.Exceptions.MyArrayDataException;
 import lesson2.Exceptions.MyArraySizeException;
 
-public class MainApp {
+public class MainApp2 {
     public static void main(String[] args) {
         System.out.println("==================================");
         System.out.println("==================================");

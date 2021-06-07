@@ -7,7 +7,7 @@ import lesson3.Task3.Fruits.Orange;
 
 import java.util.*;
 
-public class MainApp {
+public class MainApp3 {
     public static void main(String[] args) {
         String[] task1 = Task1(new String[]{"A", "AA", "AAA", "AAAA", "AAAAA", "AAAAAAA"}, 2, 5);
         System.out.println("Task1: " + task1[2]);

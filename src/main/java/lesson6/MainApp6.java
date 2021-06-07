@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class MainApp {
+public class MainApp6 {
     private static List<String> words = new ArrayList<>(Arrays.asList(
             "Первый","том","Войны","и","мира","состоит","из","трех","частей","разделенных","на","мирные","и","военные","блоки","повествования","и","охватывает",
             "события","1805","года","Мирная","первая","часть","первого","тома","произведения","и","начальные","главы","третьей","части","описывают","общественную",

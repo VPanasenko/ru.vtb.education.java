@@ -2,7 +2,7 @@ package lesson5.Updated;
 
 import java.util.concurrent.*;
 
-public class MainClass {
+public class MainApp5Updated {
     public static final int CARS_COUNT = 10   ;
     public static void main(String[] args) throws InterruptedException, BrokenBarrierException {
         // Синхронизация старта
