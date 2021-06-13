@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AppTableSQLLite<T extends SQLClass> implements AppTableManager<T> {
     private static String ConnectionString = "jdbc:sqlite:src/main/java/lesson7/demobase.db";
@@ -15,10 +16,10 @@ public class AppTableSQLLite<T extends SQLClass> implements AppTableManager<T> {
 
     private Class ClassToManage;
 
-    private Map<Class, String> hashMap = new HashMap<Class, String> () {{
-            put(int.class, "INTEGER");
-            put(String.class, "TEXT");
-            put(double.class, "REAL");
+    private Map<Class, String> converter = new HashMap<Class, String>() {{
+        put(int.class, "INTEGER");
+        put(String.class, "TEXT");
+        put(double.class, "REAL");
     }};
 
     public Class getClassToManage() {
@@ -87,64 +88,67 @@ public class AppTableSQLLite<T extends SQLClass> implements AppTableManager<T> {
     private void createTableStatement() throws SQLException {
         if (ClassToManage.isAnnotationPresent(AppTable.class)) {
             StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
-            sb.append(ClassToManage.getName());
+            sb.append(ClassToManage.getSimpleName());
             sb.append(" (");
-            Field[] fields = ClassToManage.getDeclaredFields();
-            for (Field f : fields) {
-                if (f.isAnnotationPresent(AppColumn.class)) {
-                    String fieldName = f.getName();
-                    sb.append(fieldName);
-                    sb.append(" ");
-                    sb.append(hashMap.get(f.getType()));
-                    if (fieldName.toLowerCase().equals("id")) {
-                        sb.append("PRIMARY KEY AUTOINCREMENT");
-                    }
-                    sb.append(", ");
-                }
-            }
-            sb.setLength(sb.length() - 2);
+            sb.append(getAllFields(ClassToManage));
             sb.append(");");
             String result = sb.toString();
             System.out.println(result);
             statement.executeUpdate(result);
-//        statement.executeUpdate("CREATE TABLE IF NOT EXISTS students2 (\n" +
-//                "        id    INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-//                "        name  TEXT,\n" +
-//                "        score INTEGER\n" +
-//                "    );");
         }
     }
 
-    private void insertStatement(T obj) throws SQLException, IllegalAccessException {
+    private void insertStatement(T obj) throws SQLException, IllegalAccessException, NoSuchFieldException {
         StringBuilder sb = new StringBuilder("INSERT INTO ");
-        sb.append(ClassToManage.getName());
+        sb.append(ClassToManage.getSimpleName());
         sb.append(" (");
-        Field[] fields = ClassToManage.getDeclaredFields();
+        ArrayList<Field> fields = getAppColumnFields(ClassToManage);
         StringBuilder vb = new StringBuilder(") VALUES (");
         for (Field f : fields) {
-            if (f.isAnnotationPresent(AppColumn.class)) {
-                String fieldName = f.getName();
+            String fieldName = f.getName();
+            if (!fieldName.equalsIgnoreCase("id")) {
                 sb.append(fieldName);
                 sb.append(", ");
-                vb.append(f.get(obj));
+                // Вот в таком виде вытаскивается значение поля родителя (на примере поля Name) SQLClass, а не ребёнка, например, Cat.
+                // vb.append(f.get(obj));
+                // Приходится получать через выборку этого поля у ребёнка.
+                // А в случае ошибки получать у родителя.
+                Object vbValueToAppend = "";
+                try {
+                    Field fieldChild = ClassToManage.getField(fieldName);
+                    vbValueToAppend = fieldChild.get(obj);
+                } catch (NoSuchFieldException ex) {
+                    vbValueToAppend = f.get(obj);
+                }
+                if (getFieldType(f).equals("TEXT")) {
+                    vb.append("'");
+                    vb.append(vbValueToAppend);
+                    vb.append("'");
+                }
+                else{
+                    vb.append(vbValueToAppend);
+                }
                 vb.append(", ");
             }
         }
         sb.setLength(sb.length() - 2);
+        vb.setLength(vb.length() - 2);
         sb.append(vb);
         sb.append(");");
-        //statement.executeUpdate("INSERT INTO students2 (name, score) VALUES ('Bob4', 60);");
+        String result = sb.toString();
+        System.out.println(result);
+        statement.executeUpdate(result);
     }
 
     private void readStatement() throws SQLException {
-        try (ResultSet rs = statement.executeQuery("SELECT * FROM " + ClassToManage.getClass().getName() + ";")) {
-            Field[] fields = ClassToManage.getDeclaredFields();
-            if (fields.length > 0) {
+        try (ResultSet rs = statement.executeQuery("SELECT * FROM " + ClassToManage.getSimpleName() + ";")) {
+            ArrayList<Field> fields = getAppColumnFields(ClassToManage);
+            if (!fields.isEmpty()) {
                 while (rs.next()) {
                     StringBuilder sb = new StringBuilder();
                     for (Field f : fields) {
                         String fieldName = f.getName();
-                        sb.append(f);
+                        sb.append(fieldName);
                         sb.append(": ");
                         int fieldIndex = rs.findColumn(fieldName);
                         switch (getFieldType(f)) {
@@ -195,27 +199,6 @@ public class AppTableSQLLite<T extends SQLClass> implements AppTableManager<T> {
     private String getFieldType(Field field) {
         Class fieldType = field.getType();
 
-        // Странно, что ругается на Incompatible class в switch, но нормально в if
-//        String result = "";
-//        switch (fieldType) {
-//            case String.class:
-//            case Date.class:
-//                result = "TEXT";
-//                break;
-//            case int.class:
-//            case boolean.class:
-//                result = "INTEGER";
-//                break;
-//            case double.class:
-//            case float.class:
-//                result = "REAL";
-//                break;
-//            default:
-//                result = "BLOB";
-//                break;
-//        }
-//        return result;
-
         if (fieldType == String.class || fieldType == Date.class) {
             return "TEXT";
         }
@@ -226,5 +209,48 @@ public class AppTableSQLLite<T extends SQLClass> implements AppTableManager<T> {
             return "REAL";
         }
         return "BLOB";
+    }
+
+    private String getAllFields(Class cl) {
+        StringBuilder sb = new StringBuilder();
+        ArrayList<Field> fields = getAppColumnFields(cl);
+        for (Field f : fields) {
+            String fieldName = f.getName();
+            if (fieldName.equalsIgnoreCase("id")) {
+                sb.insert(0, " PRIMARY KEY AUTOINCREMENT, ");
+                sb.insert(0, converter.get(f.getType()));
+                sb.insert(0, " ");
+                sb.insert(0, fieldName);
+            } else {
+                sb.append(fieldName);
+                sb.append(" ");
+                sb.append(converter.get(f.getType()));
+                sb.append(", ");
+            }
+        }
+        sb.setLength(sb.length() - 2);
+        return sb.toString();
+    }
+
+    private ArrayList<Field> getAppColumnFields(Class cl) {
+        Field[] fields = new Field[]{};
+        if (cl != null) {
+            fields = cl.getDeclaredFields();
+        }
+        ArrayList<Field> fieldsArray = new ArrayList<>(Arrays.asList(fields));
+        if (cl.getSuperclass() != null) {
+            if (cl.getSuperclass() != Object.class) {
+                fieldsArray.addAll(getAppColumnFields(cl.getSuperclass()));
+            }
+        }
+        Class[] interfaces = cl.getInterfaces();
+        if (interfaces.length > 0) {
+            for (Class c : interfaces) {
+                fieldsArray.addAll(getAppColumnFields(c));
+            }
+        }
+        List<Field> fieldsList = fieldsArray.stream().filter(f -> f.isAnnotationPresent(AppColumn.class)).collect(Collectors.toList());
+        fieldsList.stream().distinct().collect(Collectors.toList());
+        return new ArrayList<>(fieldsList);
     }
 }

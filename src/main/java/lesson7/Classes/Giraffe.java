@@ -4,7 +4,7 @@ import lesson7.Annotations.AppColumn;
 import lesson7.Annotations.AppTable;
 
 @AppTable
-public class Giraffe implements SQLClass{
+public class Giraffe extends SQLClass{
     @AppColumn
     public int neckLength = (int)(Math.random() * 10);
 
