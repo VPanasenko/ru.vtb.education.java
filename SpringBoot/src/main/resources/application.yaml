@@ -1,0 +1,4 @@
+server:
+  servlet:
+    context-path: /vpanasenko
+  port: 8791
