@@ -16,23 +16,19 @@ import java.util.Set;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="orderId")
+    @Column(name = "id")
     private long id;
 
     @CreationTimestamp
-    @Column(name="orderDate")
+    @Column(name = "order_date")
     private Date date;
 
-    public Date getDate() {
-        return date;
-    }
-
-    @ManyToOne
-    @JoinColumn(name="userId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "order")
-    private Set<OrderComponent> components;
+//    @OneToMany(mappedBy = "order")
+//    private Set<OrderComponent> components;
 
     public Order(User u){
         user = u;

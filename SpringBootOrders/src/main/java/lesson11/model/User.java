@@ -2,10 +2,30 @@ package lesson11.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Set;
+
+//@NamedEntityGraph(
+//        name = "User.with-orders",
+//        attributeNodes = {
+//                @NamedAttributeNode("orders")
+//        }
+//)
+//@NamedEntityGraph(
+//        name = "User.with-orders-and-components",
+//        attributeNodes = {
+//                @NamedAttributeNode(value = "orders", subgraph = "order-components")
+//        },
+//        subgraphs = {
+//                @NamedSubgraph(
+//                        name = "order-components",
+//                        attributeNodes = {
+//                                @NamedAttributeNode("components")
+//                        }
+//                )
+//        }
+//)
 
 @Entity
 @Data
@@ -14,13 +34,13 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="userId")
+    @Column(name="id")
     private long id;
 
-    @Column(name="userName")
+    @Column(name="user_name")
     private String name;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Order> orders;
 
     public User(String uName){
