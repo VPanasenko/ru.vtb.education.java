@@ -1,10 +1,9 @@
 package lesson11.services;
 
-//import lesson11.model.Order;
+import lesson11.model.DTO.UserDTO;
 import lesson11.model.User;
 import lesson11.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,19 +14,11 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-//    public List<Order> getAllOrders(){
-//        return userRepository.getAllOrders();
-//    }
-
-    public List<User> getAllUsers(){
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers(){
+        return userRepository.findAllDTO();
     }
 
-//    public List<User> getUsersWithOrdersAndComponents(){
-//        return userRepository.findAllByOrdersAndComponents();
-//    }
-
-//    public Optional<List<User>> getUsersByProduct(long productId){
-//        return userRepository.getUsersByProduct(productId);
-//    }
+    public Optional<UserDTO> getUserById(long id){
+        return userRepository.findDTOById(id);
+    }
 }
