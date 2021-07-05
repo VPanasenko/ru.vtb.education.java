@@ -15,12 +15,14 @@ import java.util.Optional;
 public class OrderDetailsDTO {
     private Long id;
     private int amount;
+    private int fixedPrice;
     private Long order;
     private Long product;
 
     public OrderDetailsDTO(OrderDetails orderDetails){
         this.id = orderDetails.getId();
         this.amount = orderDetails.getAmount();
+        this.fixedPrice = orderDetails.getFixedPrice();
         this.order = orderDetails.getOrder().getId();
         this.product = orderDetails.getProduct().getId();
     }
@@ -30,14 +32,16 @@ public class OrderDetailsDTO {
             OrderDetails orderDetails = orderDetailsOptional.get();
             this.id = orderDetails.getId();
             this.amount = orderDetails.getAmount();
+            this.fixedPrice = orderDetails.getFixedPrice();
             this.order = orderDetails.getOrder().getId();
             this.product = orderDetails.getProduct().getId();
         }
     }
 
-    public OrderDetailsDTO(Long id, int amount, Long orderId, Long productId){
+    public OrderDetailsDTO(Long id, int amount, int fixedPrice, Long orderId, Long productId){
         this.id = id;
         this.amount = amount;
+        this.fixedPrice = fixedPrice;
         this.order = orderId;
         this.product = productId;
     }

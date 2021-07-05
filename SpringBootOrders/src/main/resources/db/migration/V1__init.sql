@@ -26,10 +26,10 @@ INSERT INTO products (product_name, product_price) VALUES
     ('Five hundred', 500);
 
 DROP TABLE order_details IF EXISTS;
-CREATE TABLE IF NOT EXISTS order_details (id bigserial primary key, order_product_amount int, order_id bigint references orders(id), product_id bigint references products(id));
-INSERT INTO order_details (order_product_amount, order_id, product_id) VALUES
-(101, 5, 5),
-(202, 4, 4),
-(303, 3, 3),
-(404, 2, 2),
-(505, 1, 1);
+CREATE TABLE IF NOT EXISTS order_details (id bigserial primary key, order_product_amount int, order_product_fixedPrice int, order_id bigint references orders(id), product_id bigint references products(id));
+INSERT INTO order_details (order_product_amount, order_product_fixedPrice, order_id, product_id) VALUES
+(101, 500, 5, 5),
+(202, 400, 4, 4),
+(303, 300, 3, 3),
+(404, 200, 2, 2),
+(505, 100, 1, 1);

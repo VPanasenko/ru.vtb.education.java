@@ -43,13 +43,18 @@ public class MainController {
         return productService.getAllProducts();
     }
 
+    @PostMapping("/products/update")
+    public ProductDTO updateProduct(@RequestBody Product product) {
+        return productService.updateProduct(product);
+    }
+
     @GetMapping("/orderDetails")
     public List<OrderDetailsDTO> getOrderDetails() {
         return orderDetailsService.getAllOrderDetails();
     }
 
     @PostMapping("/orders/create")
-    public OrderDTO createOrder(@RequestBody Order order){
+    public OrderDTO createOrder(@RequestBody Order order) {
         return orderService.createOrder(order);
     }
 }

@@ -1,6 +1,7 @@
 package lesson11.services;
 
 import lesson11.model.DTO.OrderDetailsDTO;
+import lesson11.model.OrderDetails;
 import lesson11.repositories.OrderDetailsRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -16,5 +17,9 @@ public class OrderDetailsService {
 
     public List<OrderDetailsDTO> getAllOrderDetails(){
         return orderDetailsRepository.findAllDTO();
+    }
+
+    public OrderDetailsDTO createOrderDetails(OrderDetails orderDetails) {
+        return new OrderDetailsDTO(orderDetailsRepository.save(orderDetails));
     }
 }

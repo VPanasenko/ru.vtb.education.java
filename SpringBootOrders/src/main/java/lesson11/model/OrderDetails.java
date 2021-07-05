@@ -19,6 +19,9 @@ public class OrderDetails {
     @Column(name="order_product_amount")
     private int amount;
 
+    @Column(name="order_product_fixedPrice")
+    private int fixedPrice;
+
     @ManyToOne
     @JoinColumn(name="order_id")
     private Order order;
