@@ -8,6 +8,7 @@
         <option value="$PROJECT_DIR$/SpringBoot/pom.xml" />
         <option value="$PROJECT_DIR$/SpringBootCRUD/pom.xml" />
         <option value="$PROJECT_DIR$/SpringBootOrders/pom.xml" />
+        <option value="$PROJECT_DIR$/SpringSecurity/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

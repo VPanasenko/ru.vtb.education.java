@@ -1,0 +1,25 @@
+server:
+  port: 8791
+  servlet:
+    context-path: /vpanasenko/dao
+    session:
+      timeout: 60s
+  jpa:
+    show-sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.H2Dialect
+      ddl-auto: none
+      temp:
+        use_jdbc_metadata_defaults: false
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:VPanasenkoDatabase;MODE=PostgreSQL
+    username: sa
+    password:
+  h2:
+    console:
+      settings:
+        web-allow-others: false
+      enabled: true
